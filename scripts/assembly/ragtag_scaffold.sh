@@ -4,7 +4,7 @@
 #SBATCH --ntasks-per-node=1
 #SBATCH --cpus-per-task=10
 #SBATCH --mem=100GB
-#SBATCH --job-name ragtag_scaffold
+#SBATCH --job-name ragtag_scaffold_PN40024
 #SBATCH --output=%x-%j.SLURMout
 
 #Set this variable to the path to wherever you have conda installed
@@ -39,9 +39,7 @@ sample=$(pwd | sed s/.*\\/${species}\\/${genotype}\\/// | sed s/\\/.*//)
 condition="assembly"
 assembly=$(pwd | sed s/^.*\\///)
 path2=$(pwd | sed s/${genotype}\\/${sample}.*/${genotype}\\/${sample}/)
-path3=$(pwd | sed s/${species}\\/.*/${species}\\//)
 version=$(ls ${path3}/Reference/*-v*.fa | sed s/.*\-v// | sed s/.fa//)
-ref="${path3}/Reference/*.fa"
 
 #Look for fasta file, there can only be one!
 if [ -z ${input} ]
@@ -74,27 +72,18 @@ else
 	gaps=
 fi
 
-#Get list of genomes
-genomes=$(awk -v FS="," \
-	-v a=${species} \
-	-v b=${genotype} \
-	-v c=${sample} \
-	-v d=${condition} \
-	-v e=${datatype} \
-	'{if ($1 == a && $2 == b && $3 == c && $4 == d && $5 == e) print $7}' \
-	${path1}/samples.csv)
 
 #Run ragtag scaffold
 
 echo "Running ragtag scaffold"
 
 ragtag.py scaffold \
--o GS_ragtag_scaffold \
+-o PN40024 \
 -f ${min_len} \
 -d ${merge_dist} \
 -i ${min_grouping_score} \
 -a ${min_location_score} \
 -s ${min_orient_score} ${gaps} \
-${ref} ${input}
+../../../../../../../ref/PN40024/Vvinifera.fa ${input}
 
 echo "Done"
