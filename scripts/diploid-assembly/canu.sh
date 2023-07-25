@@ -29,6 +29,7 @@ ${canu} \
 genomeSize=${size} \
 -corrected \
 -trimmed \
+gridOptions="--time=168:00:00" \
 -nanopore ${reads}
 
 echo "Done"
