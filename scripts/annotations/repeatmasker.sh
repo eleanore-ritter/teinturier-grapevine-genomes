@@ -5,7 +5,7 @@
 #SBATCH --cpus-per-task=40
 #SBATCH --mem=400GB
 #SBATCH --job-name repeatmasker
-#SBATCH --output=../job_reports/%x-%j.SLURMout
+#SBATCH --output=job_reports/%x-%j.SLURMout
 
 #Set this variable to the path to wherever you have conda installed
 conda="${HOME}/anaconda3"
@@ -28,7 +28,7 @@ export LD_LIBRARY_PATH="${conda}/envs/EDTA/lib:${LD_LIBRARY_PATH}"
 path1=$(pwd | sed s/data.*/misc/)
 species=$(pwd | sed s/^.*\\/data\\/// | sed s/\\/.*//)
 genotype=$(pwd | sed s/.*\\/${species}\\/// | sed s/\\/.*//)
-sample=$(pwd | sed s/.*\\/${genotype}\\/// | sed s/\\/.*//)
+sample="dakapowt"
 version=$(ls *.fa | sed s/.*\_V// | sed s/.fa//)
 path2="repeatmasker"
 

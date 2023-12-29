@@ -1,7 +1,7 @@
 #!/bin/sh -login
 
 
-#SBATCH --time=168:00:00             # limit of wall clock time - how long the job will run (same as -t)
+#SBATCH --time=03:59:00             # limit of wall clock time - how long the job will run (same as -t)
 #SBATCH --nodes=4                   # number of different nodes - could be an exact number or a range of nodes (same as -N)
 #SBATCH --ntasks-per-node=1         # number of tasks - how many tasks (nodes) that you require (same as -n)
 #SBATCH --cpus-per-task=1           # number of CPUs (or cores) per task (same as -c)
