@@ -1,5 +1,5 @@
 #!/bin/bash --login
-#SBATCH --time=168:00:00
+#SBATCH --time=03:59:00
 #SBATCH --nodes=1
 #SBATCH --ntasks-per-node=1
 #SBATCH --cpus-per-task=20
@@ -96,108 +96,108 @@ echo ${LR_bam_list}
 # 	echo ${LR_bam_list}
 # fi
 
-#Add various settings
-settings="-v -p ${threads}"
-if [ ${trim} = FALSE ]
-then
-	settings="${settings} -t"
-fi
-#Run stringtie with bam files combined
-if [ ${combine_bams} = TRUE ]
-then
-	echo "combine_bams is turned on"
-	if [[ ${SRread} = TRUE && ${LRread} = TRUE ]]
-	then
-		echo "Using both short & long reads"
-		settings="${SR_bam_list} ${LR_bam_list} ${settings} --mix -o combined.gtf"
-	fi
-	if [[ ${SRread} = TRUE && ${LRread} = FALSE ]]
-	then
-		echo "Using only short reads"
-		if [ ${SR_read_type} = "rf" ]
-		then
-			settings="${SR_bam_list} ${settings} --rf  -g ${max_gap_SR} -s ${min_single_exon_reads_SR} -o SR_combined.gtf" 
-		elif [ ${SR_read_type} = "fr" ]
-		then
-			settings="${SR_bam_list} ${settings} --fr  -g ${max_gap_SR} -s ${min_single_exon_reads_SR} -o SR_combined.gtf"
-		fi
-	fi
-	if [[ ${SRread} = FALSE && ${LRread} = TRUE ]]
-	then
-		echo "Using only long reads"
-		settings="${LR_bam_list} ${settings} -L -E ${LR_splice_window} -g ${max_gap_LR} -s ${min_single_exon_reads_LR} -o LR_combined.gtf"
-	fi
-	#Run stringtie
-	echo ${settings}
-	echo "Running stringtie on combined bam files"
-	stringtie \
-		${settings} \
-		-c ${min_multi_exon_reads} \
-		-f ${min_iso_frac} \
-		-m ${min_transcript_len} \
-		-a ${min_anchor_len} \
-		-j ${min_junc_cov} \
-		-M ${frac_multi_hit} \
-		-l ${output}
-fi
-#Run stringtie on each bam file separately
-if [ ${combine_bams} = FALSE ]
-then
-	echo "combine_bams is turned off"
-	if [ ${SRread} = TRUE ]
-	then
-		echo "Running stringtie on short reads"
-		if [ ${SR_read_type} = "rf" ]
-		then
-			settings="${settings} --rf"
-		elif [ ${SR_read_type} = "fr" ]
-		then
-			settings="${settings} --fr"
-		fi
-		for i in ${SR_bam_list}
-		do
-			echo ${settings}
-			output=$(echo ${i} | sed s/.*rnaseq-annotation\\/// | cut -f1 -d"/" | sed s/_dakapowt_sorted.bam//)
-			#Run stringtie
-			echo "Running Stringtie on ${output}"
-			stringtie ${i} \
-			${settings} \
-			-c ${min_multi_exon_reads} \
-			-s ${min_single_exon_reads_SR} \
-			-f ${min_iso_frac} \
-			-g ${max_gap_SR} \
-			-m ${min_transcript_len} \
-			-a ${min_anchor_len} \
-			-j ${min_junc_cov} \
-			-M ${frac_multi_hit} \
-			-l ${output} \
-			-o ${output}.gtf
-		done
-	fi
-	if [ ${LRread} = TRUE ]
-	then
-		echo "Running stringtie on long reads"
-		settings="${settings} -L -E ${LR_splice_window}"
-		for i in ${LR_bam_list}
-		do
-			output=$(echo ${i} | sed s/.*rnaseq-annotation\\/// | cut -f1 -d"/" | sed s/_dakapowt_sorted.bam//)
-			#Run stringtie
-			echo "Running Stringtie on ${output}"
-			stringtie ${i} \
-			${settings} \
-			-c ${min_multi_exon_reads} \
-			-s ${min_single_exon_reads_LR} \
-			-f ${min_iso_frac} \
-			-g ${max_gap_LR} \
-			-m ${min_transcript_len} \
-			-a ${min_anchor_len} \
-			-j ${min_junc_cov} \
-			-M ${frac_multi_hit} \
-			-l ${output} \
-			-o ${output}.gtf
-		done
-	fi
-fi
+# #Add various settings
+# settings="-v -p ${threads}"
+# if [ ${trim} = FALSE ]
+# then
+# 	settings="${settings} -t"
+# fi
+# #Run stringtie with bam files combined
+# if [ ${combine_bams} = TRUE ]
+# then
+# 	echo "combine_bams is turned on"
+# 	if [[ ${SRread} = TRUE && ${LRread} = TRUE ]]
+# 	then
+# 		echo "Using both short & long reads"
+# 		settings="${SR_bam_list} ${LR_bam_list} ${settings} --mix -o combined.gtf"
+# 	fi
+# 	if [[ ${SRread} = TRUE && ${LRread} = FALSE ]]
+# 	then
+# 		echo "Using only short reads"
+# 		if [ ${SR_read_type} = "rf" ]
+# 		then
+# 			settings="${SR_bam_list} ${settings} --rf  -g ${max_gap_SR} -s ${min_single_exon_reads_SR} -o SR_combined.gtf" 
+# 		elif [ ${SR_read_type} = "fr" ]
+# 		then
+# 			settings="${SR_bam_list} ${settings} --fr  -g ${max_gap_SR} -s ${min_single_exon_reads_SR} -o SR_combined.gtf"
+# 		fi
+# 	fi
+# 	if [[ ${SRread} = FALSE && ${LRread} = TRUE ]]
+# 	then
+# 		echo "Using only long reads"
+# 		settings="${LR_bam_list} ${settings} -L -E ${LR_splice_window} -g ${max_gap_LR} -s ${min_single_exon_reads_LR} -o LR_combined.gtf"
+# 	fi
+# 	#Run stringtie
+# 	echo ${settings}
+# 	echo "Running stringtie on combined bam files"
+# 	stringtie \
+# 		${settings} \
+# 		-c ${min_multi_exon_reads} \
+# 		-f ${min_iso_frac} \
+# 		-m ${min_transcript_len} \
+# 		-a ${min_anchor_len} \
+# 		-j ${min_junc_cov} \
+# 		-M ${frac_multi_hit} \
+# 		-l ${output}
+# fi
+# #Run stringtie on each bam file separately
+# if [ ${combine_bams} = FALSE ]
+# then
+# 	echo "combine_bams is turned off"
+# 	if [ ${SRread} = TRUE ]
+# 	then
+# 		echo "Running stringtie on short reads"
+# 		if [ ${SR_read_type} = "rf" ]
+# 		then
+# 			settings="${settings} --rf"
+# 		elif [ ${SR_read_type} = "fr" ]
+# 		then
+# 			settings="${settings} --fr"
+# 		fi
+# 		for i in ${SR_bam_list}
+# 		do
+# 			echo ${settings}
+# 			output=$(echo ${i} | sed s/.*rnaseq-annotation\\/// | cut -f1 -d"/" | sed s/_dakapowt_sorted.bam//)
+# 			#Run stringtie
+# 			echo "Running Stringtie on ${output}"
+# 			stringtie ${i} \
+# 			${settings} \
+# 			-c ${min_multi_exon_reads} \
+# 			-s ${min_single_exon_reads_SR} \
+# 			-f ${min_iso_frac} \
+# 			-g ${max_gap_SR} \
+# 			-m ${min_transcript_len} \
+# 			-a ${min_anchor_len} \
+# 			-j ${min_junc_cov} \
+# 			-M ${frac_multi_hit} \
+# 			-l ${output} \
+# 			-o ${output}.gtf
+# 		done
+# 	fi
+# 	if [ ${LRread} = TRUE ]
+# 	then
+# 		echo "Running stringtie on long reads"
+# 		settings="${settings} -L -E ${LR_splice_window}"
+# 		for i in ${LR_bam_list}
+# 		do
+# 			output=$(echo ${i} | sed s/.*rnaseq-annotation\\/// | cut -f1 -d"/" | sed s/_dakapowt_sorted.bam//)
+# 			#Run stringtie
+# 			echo "Running Stringtie on ${output}"
+# 			stringtie ${i} \
+# 			${settings} \
+# 			-c ${min_multi_exon_reads} \
+# 			-s ${min_single_exon_reads_LR} \
+# 			-f ${min_iso_frac} \
+# 			-g ${max_gap_LR} \
+# 			-m ${min_transcript_len} \
+# 			-a ${min_anchor_len} \
+# 			-j ${min_junc_cov} \
+# 			-M ${frac_multi_hit} \
+# 			-l ${output} \
+# 			-o ${output}.gtf
+# 		done
+# 	fi
+# fi
 
 #Convert to gff3 and reformat for maker
 if [ ${reformat_for_maker} = TRUE ]
@@ -221,5 +221,21 @@ then
 	done
 fi
 
-echo "Done"
+#Get est gff
 
+if [ ! -s est_maker_input.gff ]
+then
+	echo "Getting est alignments"
+	for i in *_maker_input.gff
+	do
+		echo "Adding ${i} est alginments"
+		cat ${i} >> tmp.gff
+	done
+	#Sort the gff file
+	gff3_sort -g tmp.gff -og est_maker_input.gff
+	rm tmp.gff
+else
+	echo "est gff found"
+fi
+
+echo "Done"
