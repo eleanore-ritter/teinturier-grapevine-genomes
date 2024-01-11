@@ -28,7 +28,7 @@ export AUGUSTUS_CONFIG_PATH="${conda}/envs/maker/config/"
 #export REPEATMASKER_MATRICES_DIR=
 
 #The following shouldn't need to be changed, but should set automatically
-path1=$(pwd | sed s/data.*/misc/)
+path1=$(pwd | sed s/data.*/scripts/)
 path2=$(pwd | sed s/data.*/scripts/)
 species=$(pwd | sed s/^.*\\/data\\/// | sed s/\\/.*//)
 genotype=$(pwd | sed s/.*\\/${species}\\/// | sed s/\\/.*//)
@@ -128,10 +128,10 @@ else
 fi
 
 #Run maker
-echo "Running Maker Round 1 on ${fasta/.fa*/}"
+echo "Running Maker Round 1 on ${fasta}"
 maker \
 	-q \
-	-genome ../${fasta} \
+	-genome ${fasta} \
 	-cpus ${blast_threads} \
 	${path1}/annotation/${path3}/*
 
