@@ -5,29 +5,39 @@
 #SBATCH --cpus-per-task=1
 #SBATCH --mem=50GB
 #SBATCH --job-name reformat
-#SBATCH --output=.../job_reports/%x-%j.SLURMout
+#SBATCH --output=../job_reports/%x-%j.SLURMout
 
 #Set this variable to the path to wherever you have conda installed
 conda="${HOME}/anaconda3"
 
-#Combine and reformat exonerate data into gff
+#Change to current directory
+cd ${PBS_O_WORKDIR}
+#Export paths to conda
+export PATH="${conda}/envs/maker/bin:${PATH}"
+export LD_LIBRARY_PATH="${conda}/envs/maker/lib:${LD_LIBRARY_PATH}"
 
+#Combine and reformat exonerate data into gff
 path1=$(pwd | sed s/data.*/scripts/)
 a=$(pwd | sed s/.*\\///)
-chunks=$(ls | grep "myseq")
+species=$(ls)
 path2="exonerate_output"
 
 mkdir tmp
 mkdir ${path2}
 
-for i in ${chunks}
+for k in ${species}
 do
-	cd ${i}
-	for j in target_chunk_*_query_chunk_*
+	cd ${k}
+	for i in $(ls | grep "myseq")
 	do
-		sed '1,2d' ${j} | grep -v "\-\-\ completed\ exonerate\ analysis" > ../tmp/${j}.tmp
+		cd ${i}
+		for j in target_chunk_*_query_chunk_*
+		do
+			sed '1,2d' ${j} | grep -v "\-\-\ completed\ exonerate\ analysis" > ../../tmp/${k}_${i}_${j}.tmp
+		done
 		cd ../
 	done
+	cd ../
 done
 
 cat tmp/*tmp > ${a}
