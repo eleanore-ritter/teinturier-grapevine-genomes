@@ -12,8 +12,8 @@ conda="${HOME}/anaconda3"
 
 #Set variables
 maker_dir="../maker_round1" #maker dir with gff & transcripts, not needed if input_gff & transcripts specified
-input_gff= #input gff file, if left blank will look in maker_dir
-transcripts= #transcript fasta file, if left blank will look in maker_dir
+input_gff="../maker_round1/Vvi_Dakapo_without_chr00.all.gff" #input gff file, if left blank will look in maker_dir
+transcripts="../maker_round1/Vvi_Dakapo_without_chr00.all.maker.transcripts.fasta" #transcript fasta file, if left blank will look in maker_dir
 AUGUSTUS_SPECIES_NAME="Vvinifera-Dakapo" #Species name for Augustus, if left blank will automatically set
 fasta="../Vvi_Dakapo_without_chr00.fa" #input fasta, if left blank, will look for it in current directory
 
