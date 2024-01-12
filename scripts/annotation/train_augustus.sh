@@ -61,83 +61,72 @@ then
 	transcripts="${maker_dir}/${fasta}.all.maker.transcripts.fasta"
 fi
 
+# echo "Running maker2zff"
+# maker2zff \
+# 	-c 0.5 \
+# 	-e 0.5 \
+# 	-o 0.5 \
+# 	-a 0 \
+# 	-t 0 \
+# 	-l 200 \
+# 	-x 0.2 \
+# 	${input_gff}
 
-#Run maker2zff
-#For determining which genes are High Confidence for Retraining, there are 7 criteria.
-#-c fraction  The fraction of splice sites confirmed by an EST alignment, default 0.5
-#-e fraction  The fraction of exons that overlap an EST alignment, default 0.5
-#-o fraction  The fraction of exons that overlap any evidence (EST or Protein), default 0.5
-#-a fraction  The fraction of splice sites confirmed by an ab-initio prediction, default 0
-#-t fraction  The fraction of exons that overlap an ab-initio prediction, default 0
-#-l number    The min length of the protein sequence produced by the mRNA
-#-x number    Max AED to allow 0.5 is default
-#-n           No filtering.  Accept all.
-echo "Running maker2zff"
-maker2zff \
-	-c 0.5 \
-	-e 0.5 \
-	-o 0.5 \
-	-a 0 \
-	-t 0 \
-	-l 200 \
-	-x 0.2 \
-	${input_gff}
+# #Run fathom
+# #-validate [-quiet]
+# #-gene-stats [-errors-ok -nucleotide -dinucleotide]
+# #-categorize <int>
+# #-export <int> [-plus -errors-ok]
+# #-extract <feature> -length <int> -offset <int>
+# #-exon-intron
+# #-split <-number <int> | -training <float> | -GC <float> | -repeat <float>>
+# #-ace-format <-gene-method <string> [-dna -extra <string>]>
+# #-compare-genes <predictions> [-details]
+# #-score-genes <hmm> [-errors-ok]
+# #-filter-genes <hmm> -min-score <float> -min-length <int>
+# echo "Running fathom"
+# fathom \
+# 	genome.ann \
+# 	genome.dna \
+# 	-categorize 1000
 
-#Run fathom
-#-validate [-quiet]
-#-gene-stats [-errors-ok -nucleotide -dinucleotide]
-#-categorize <int>
-#-export <int> [-plus -errors-ok]
-#-extract <feature> -length <int> -offset <int>
-#-exon-intron
-#-split <-number <int> | -training <float> | -GC <float> | -repeat <float>>
-#-ace-format <-gene-method <string> [-dna -extra <string>]>
-#-compare-genes <predictions> [-details]
-#-score-genes <hmm> [-errors-ok]
-#-filter-genes <hmm> -min-score <float> -min-length <int>
-echo "Running fathom"
-fathom \
-	genome.ann \
-	genome.dna \
-	-categorize 1000
+# NUMFOUND="`grep -c '>' uni.ann`"
 
-NUMFOUND="`grep -c '>' uni.ann`"
+# if [ ${NUMFOUND} -gt 599 ]
+# then
+# 	NUMFOUND=600
+# fi
 
-if [ ${NUMFOUND} -gt 599 ]
-then
-	NUMFOUND=600
-fi
+# TEMPSPLIT=$((NUMFOUND/2))
+# NUMSPLIT=${TEMPSPLIT/.*}
 
-TEMPSPLIT=$((NUMFOUND/2))
-NUMSPLIT=${TEMPSPLIT/.*}
+# echo "number found after fathom: ${NUMFOUND}"
+# echo "number after split: ${NUMSPLIT}"
 
-echo "number found after fathom: ${NUMFOUND}"
-echo "number after split: ${NUMSPLIT}"
+# #Convert the uni.ann and uni.dna output from fathom into a genbank formatted file.
+# #fathom_to_genbank.pl is from https://github.com/Childs-Lab/GC_specific_MAKER.
+# echo "Conveting fathom to genbank format"
+# perl ${path2}/annotation/pl/fathom_to_genbank.pl \
+# 	--annotation_file uni.ann \
+# 	--dna_file uni.dna \
+# 	--genbank_file augustus.gb \
+# 	--number ${NUMFOUND}
 
-#Convert the uni.ann and uni.dna output from fathom into a genbank formatted file.
-#fathom_to_genbank.pl is from https://github.com/Childs-Lab/GC_specific_MAKER.
-echo "Conveting fathom to genbank format"
-perl ${path2}/annotation/pl/fathom_to_genbank.pl \
-	--annotation_file uni.ann \
-	--dna_file uni.dna \
-	--genbank_file augustus.gb \
-	--number ${NUMFOUND}
+# #Get the subset of fastas that correspond to the genes in the genbank file.
+# #get_subset_of_fastas.pl is from github: https://github.com/Childs-Lab/GC_specific_MAKER.
+# echo "Making genbank gene list"
+# perl -e  'while (my $line = <>){ if ($line =~ /^LOCUS\s+(\S+)/) { print "$1\n"; } }' \
+# augustus.gb > genbank_gene_list.txt
 
-#Get the subset of fastas that correspond to the genes in the genbank file.
-#get_subset_of_fastas.pl is from github: https://github.com/Childs-Lab/GC_specific_MAKER.
-echo "Making genbank gene list"
-perl -e  'while (my $line = <>){ if ($line =~ /^LOCUS\s+(\S+)/) { print "$1\n"; } }' \
-augustus.gb > genbank_gene_list.txt
+# echo "Subsetting fastas"
+# perl ${path2}/annotation/pl/get_subset_of_fastas.pl \
+# 	-l genbank_gene_list.txt \
+# 	-f uni.dna \
+# 	-o genbank_gene_seqs.fasta
 
-echo "Subsetting fastas"
-perl ${path2}/annotation/pl/get_subset_of_fastas.pl \
-	-l genbank_gene_list.txt \
-	-f uni.dna \
-	-o genbank_gene_seqs.fasta
-
-#Split genes into test and training files.
-echo "Randomly splitting genes into test and training files"
-randomSplit.pl augustus.gb ${NUMSPLIT}
+# #Split genes into test and training files.
+# echo "Randomly splitting genes into test and training files"
+# randomSplit.pl augustus.gb ${NUMSPLIT}
 
 #We will use autoAug.pl for training because we have transcript alignments that will be used as hints.
 #The etraining and optimize_augustus.pl scripts from AUGUSTUS will not be used as they do not allow 
