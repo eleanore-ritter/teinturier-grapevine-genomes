@@ -15,7 +15,7 @@ maker_dir="../maker_round1" #maker dir with gff & transcripts, not needed if inp
 input_gff= #input gff file, if left blank will look in maker_dir
 transcripts= #transcript fasta file, if left blank will look in maker_dir
 AUGUSTUS_SPECIES_NAME="Vvinifera-Dakapo" #Species name for Augustus, if left blank will automatically set
-fasta="../repeatmasker/Vvi_Dakapo_without_chr00.fa.masked" #input fasta, if left blank, will look for it in current directory
+fasta="../Vvi_Dakapo_without_chr00.fa" #input fasta, if left blank, will look for it in current directory
 
 #Change to current directory
 cd ${PBS_O_WORKDIR}
