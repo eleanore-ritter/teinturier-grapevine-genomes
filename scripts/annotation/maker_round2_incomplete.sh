@@ -35,53 +35,15 @@ genotype=$(pwd | sed s/.*\\/${species}\\/// | sed s/\\/.*//)
 sample=$(pwd | sed s/.*${species}\\/${genotype}\\/// | sed s/\\/.*//)
 path3="maker_round2"
 
-#Look for fasta file, there can only be one!
-if [ -z ${fasta} ]
-then
-	echo "No input fasta provided, looking for fasta"
-	if ls *.fa >/dev/null 2>&1
-	then
-		fasta=$(ls *fa | sed s/.*\ //)
-		echo "Fasta file ${fasta} found"
-	elif ls *.fasta >/dev/null 2>&1
-	then
-		fasta=$(ls *fasta | sed s/.*\ //)
-		echo "Fasta file ${fasta} found"
-	elif ls *.fna >/dev/null 2>&1
-	then
-		fasta=$(ls *fna | sed s/.*\ //)
-		echo "Fasta file ${fasta} found"
-	else
-		echo "No fasta file found, please check and restart"
-	fi
-else
-	echo "Input fasta: ${fasta}"
-fi
-
-#Make & cd to directory
-if [ -d ${path3} ]
-then
-	cd ${path3}
-else
-	mkdir ${path3}
-	cd ${path3}
-fi
+cd ${path3}
 
 #Set temporary directories for large memory operations
 export TMPDIR=$(pwd)
 export TMP=$(pwd)
 export TEMP=$(pwd)
 
-#Run maker
-echo "Running Maker Round 2 on ${fasta/.f.*/}"
-maker \
-	-q \
-	-genome ${fasta} \
-	-cpus ${blast_threads} \
-	${path1}/annotation/${path3}/*
-
 #Get gff & fasta files
-gff3_merge -d ${fasta/.f*/}.maker.output/${fasta/.f*/}_master_datastore_index.log
-fasta_merge -d ${fasta/.f*/}.maker.output/${fasta/.f*/}_master_datastore_index.log
+gff3_merge -d Vvi_Dakapo_without_chr00.maker.output/Vvi_Dakapo_without_chr00_master_datastore_index.log
+fasta_merge -d Vvi_Dakapo_without_chr00.maker.output/Vvi_Dakapo_without_chr00_master_datastore_index.log
 
 echo "Done"

@@ -13,7 +13,7 @@ conda="${HOME}/anaconda3"
 #Set variables
 SR=TRUE #Use short read transcript asemblies?
 LR=TRUE #Use long read transcript assemblies?
-fasta="../repeatmasker/Vvi_Dakapo_without_chr00.fa.masked" #input fasta, if left blank, will look for it in current directory
+fasta="../Vvi_Dakapo_without_chr00.fa" #input fasta, if left blank, will look for it in current directory
 blast_threads=1 #Leave 1 for MPI
 
 #Change to current directory
@@ -34,14 +34,15 @@ species=$(pwd | sed s/^.*\\/data\\/// | sed s/\\/.*//)
 genotype=$(pwd | sed s/.*\\/${species}\\/// | sed s/\\/.*//)
 sample=$(pwd | sed s/.*${species}\\/${genotype}\\/// | sed s/\\/.*//)
 path3="maker_round1"
+path4="unmasked_maker_round1"
 
 #Make & cd to directory
-if [ -d ${path3} ]
+if [ -d ${path4} ]
 then
-	cd ${path3}
+	cd ${path4}
 else
-	mkdir ${path3}
-	cd ${path3}
+	mkdir ${path4}
+	cd ${path4}
 fi
 
 #Set temporary directories for large memory operations
