@@ -1,5 +1,5 @@
-#setwd("C:/Users/rittere5/OneDrive - Michigan State University/Dakapo_Genome/") #Work working directory
-setwd("C:/Users/elean/OneDrive - Michigan State University/Dakapo_Genome/")
+setwd("C:/Users/rittere5/OneDrive - Michigan State University/Dakapo_Genome/") #Work working directory
+#setwd("C:/Users/elean/OneDrive - Michigan State University/Dakapo_Genome/")
 
 library(biomaRt)
 library(dplyr)
@@ -75,3 +75,15 @@ results2 <- getBM(attributes=c('ensembl_gene_id','tair_symbol', 'description', '
 results2A <- results2[!duplicated(results2$ensembl_gene_id), ] # Remove duplicates
 
 data2A <- merge(data2,results2A, by.x = "V2", by.y = "tair_locus_model", all.x = TRUE)
+
+# Make Table S4
+genecoords <- read.csv("chr10-inv-hap2-gene-coords.tsv", sep="\t", header=FALSE)
+temp1 <-  merge(data2A,genecoords, by = "V1", all.x = TRUE)
+tables4 <- temp1 %>% select(V1, V2.y, V2.x)
+tables4$V1 <- sub("\\.\\d+$", "", tables4$V1)
+tables4$V1 <- sub("_t00\\d+$", "", tables4$V1)
+tables4$V2.x <- sub("\\.\\d+$", "", tables4$V2.x)
+tables4 <- tables4[order(tables4$V2.y),]
+#write.csv(tables4, file="temp.csv", row.names = FALSE)
+
+
