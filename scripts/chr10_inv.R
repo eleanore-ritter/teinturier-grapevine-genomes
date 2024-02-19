@@ -6,26 +6,28 @@ library(dplyr)
 library(ggplot2)
 
 ########################## PLOT INVERSION ##########################
-# Load data
-hap1.coords <- read.csv("hap1_chr10.coords", skip=4, sep = "\t", header=FALSE)
-colnames(hap1.coords) <- c("S1", "E1", "S2", "E2", "LEN_1", "LEN_2", "PERCENT_ID", "TAGS1", "TAGS2")
+# NOT USING FOR NOW!
 
-# Extract coordinates and set up dataframe
-dak1 <- hap1.coords[,1:2]
-colnames(dak1) <- c("X","Y")
-dak1$genome <- c("Dakapo")
-
-hap1 <- hap1.coords[,4:3]
-colnames(hap1) <- c("X","Y")
-hap1$genome <- c("Rubired haplotype 1")
-
-coords1 <- rbind(dak1,hap1)
-ggplot(coords1, aes(x = X, y = Y, color = genome)) +
-  geom_point()
-
-coords1 <- hap1.coords[,c("E1","E2")]
-ggplot(coords1, aes(x = E1, y = E2)) +
-  geom_point()
+# # Load data
+# hap1.coords <- read.csv("hap1_chr10.coords", skip=4, sep = "\t", header=FALSE)
+# colnames(hap1.coords) <- c("S1", "E1", "S2", "E2", "LEN_1", "LEN_2", "PERCENT_ID", "TAGS1", "TAGS2")
+# 
+# # Extract coordinates and set up dataframe
+# dak1 <- hap1.coords[,1:2]
+# colnames(dak1) <- c("X","Y")
+# dak1$genome <- c("Dakapo")
+# 
+# hap1 <- hap1.coords[,4:3]
+# colnames(hap1) <- c("X","Y")
+# hap1$genome <- c("Rubired haplotype 1")
+# 
+# coords1 <- rbind(dak1,hap1)
+# ggplot(coords1, aes(x = X, y = Y, color = genome)) +
+#   geom_point()
+# 
+# coords1 <- hap1.coords[,c("E1","E2")]
+# ggplot(coords1, aes(x = E1, y = E2)) +
+#   geom_point()
 
 ########################## FUNCTION OF GENES IN INVERSION ##########################
 # Load data
