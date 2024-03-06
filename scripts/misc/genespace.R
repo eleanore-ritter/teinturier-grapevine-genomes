@@ -29,3 +29,39 @@ ripDat <- plot_riparian(
   gsParam = out, 
   refGenome = "Vvinifera_dakapo", 
   forceRecalcBlocks = FALSE)
+
+# -- plot for publication
+
+load('genespace/workingDirectory/results/gsParams.rda',
+     verbose = TRUE)
+
+chr.assemblies <- c("Vvinifera_dakapo", 
+                    "Vvinifera_rubired_hap1",
+                    "Vvinifera_rubired_hap2",
+                    "Vvinifera_cabernetfranc",
+                    "Vvinifera_cabernetsauvignon",
+                    "Vvinifera_pinotnoir",
+                    "Vvinifera_chardonnay")
+
+ggthemes <- ggplot2::theme(
+  panel.background = ggplot2::element_rect(fill = "white"))
+
+customPal <- colorRampPalette(
+  c("darkorange", "skyblue", "darkblue", "purple", "darkred", "salmon"))
+
+ripDat <- plot_riparian(
+  gsParam = gsParam, 
+  refGenome = "Vvinifera_dakapo", 
+  forceRecalcBlocks = FALSE,
+  genomeIDs = chr.assemblies,
+  minChrLen2plot = 500,
+  chrFill = "lightgrey",
+  addThemes = ggthemes,
+  palette = customPal,
+  braidAlpha = 0.75,
+  chrLabFun = function(x) gsub("^0", "", gsub("chr|scaf|chromosome|scaffold|^lg|_|vitvixrubiredfps02_v1\\.0\\.hap1\\.|vitvixrubiredfps02_v1\\.0\\.hap2\\.|vitvvi_vcabfran04_v1\\.1\\.hap1\\.|vitvvi_vcabsauv08_v1\\.1\\.hap1\\.|vitvvi_vpinnoir123_v1\\.0\\.hap1\\.|vvchar04_v1_gcs", "", tolower(x))))
+p1 <- ripDat$plotData$ggplotObj
+p2 <- p1 + 
+  scale_y_discrete(limits = c("Dakapo", "Rubired Haplotype 1", "Rubired Haplotype 2", "Cabernet Franc", "Cabernet Sauvignon", "Pinot Noir", "Chardonnay"))+
+  theme(axis.text.y = element_text(size = 10), axis.title.y = element_blank())
+p2
