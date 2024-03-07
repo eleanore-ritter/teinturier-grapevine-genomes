@@ -1,5 +1,15 @@
-## Dakapo Genome Assembly and Annotations 🍇
+## Genome assembly and annotation for two teinturier grapevine varieties 🍇
+### *Note: the pre-print and manuscript associated with this work are forthcoming*
+<br />
 
-**This Github repository contains the scripts used for the assembly and annotation of the genome of the Dakapo variety of domesticated grapevine (*Vitis vinifera* L.).**
+### This repository contains and/or links to the scripts used in the assembly and annotation of the genomes for the Dakapo and Rubired varieties of domesticated grapevine (*Vitis vinifera* L.). See below for details:
+<br />
 
-*Note: the pre-print and manuscript associated with this work is forthcoming*
+### Dakapo
+See the "scripts" directory of this repository for scripts used in the assembly and annotation of the Dakapo genome
+<br />
+<br />
+### Rubired
+See https://github.com/andreaminio/haplosync for scripts used in the scaffolding of the Rubired genome
+
+See https://github.com/andreaminio/AnnotationPipeline-EVM_based-DClab for scripts used in the annotation of the Rubired genome
